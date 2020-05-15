@@ -7,7 +7,7 @@ import spotipy.util as util
 from json.decoder import JSONDecodeError
 
 username =sys.argv[1]
-scope = 'playlist-read-private'
+scope = 'user-read-private user-read-playback-state user-modify-playback-state'
 client_id ='bb2e3fbb3d464ce2b843bf5f2bfeebf0'
 client_secret='645eef3583144fb3ae92f3985ea1a94b'
 redirect_uri ='http://google.com/'
@@ -27,8 +27,26 @@ except:
 #Create spotifyObject
 spotifyObject=spotipy.Spotify(auth=token)
 
-user = spotifyObject.current_user()
+# Get Current Device
+devices = spotifyObject.devices()
 
+if devices['devices'] ==[]:
+    print("No Song is Currently Being Played")
+else:
+    deviceID = devices['devices'][0]['id']
+
+    # Get currently playing Track and Artist 
+    track = spotifyObject.current_user_playing_track()
+    print(json.dumps(track, sort_keys=True, indent=4))
+    artist = track['item']['artists'][0]['name']
+    track = track['item']['name']
+
+    if artist != "":
+        print("Currently Playing " + artist + " - " + track)
+        webbrowser.open(track['item']['album']['images'][0]['url'])
+
+
+user = spotifyObject.current_user()
 displayName = user['display_name']
 follower = user['followers']['total']
 
@@ -51,7 +69,6 @@ while True:
 
         # Get the search results
         searchResults = spotifyObject.search(searchQuery,1,0,"artist")
-        print(json.dumps(searchResults, sort_keys=True, indent=4))
 
         # Artist Details
         artist = searchResults['artists']['items'][0]
@@ -69,6 +86,30 @@ while True:
 
         # Extract Album Data
         albumResults = spotifyObject.artist_albums(artistID)
+        albumResults = albumResults['items']
+
+        for item in albumResults:
+            print("ALBUM "+ item['name'])
+            albumID = item['id']
+            albumArt = item['images'][0]['url']
+
+            # Extract Track Data
+            trackResults = spotifyObject.album_tracks(albumID)
+            trackResults = trackResults['items']
+
+            for item in trackResults:
+                print(str(z) + ": " + item['name'])
+                trackURIs.append(item['uri'])
+                trackArt.append(albumArt)
+                z+=1
+            print()
+
+            # See album art
+        while True:
+            songSelection = input("Etner a song number to see the album art (x to exit): ")
+            if songSelection =="x":
+                break
+            webbrowser.open(trackArt[int(songSelection)])
 
     # Ends the program
     if choice =="1":
