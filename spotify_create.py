@@ -29,7 +29,8 @@ spotifyObject=spotipy.Spotify(auth=token)
 
 # Get Current Device
 devices = spotifyObject.devices()
-
+track = spotifyObject.current_user_playing_track()
+print()
 if devices['devices'] ==[]:
     print("No Song is Currently Being Played")
 else:
@@ -37,23 +38,24 @@ else:
 
     # Get currently playing Track and Artist 
     track = spotifyObject.current_user_playing_track()
-    print(json.dumps(track, sort_keys=True, indent=4))
-    artist = track['item']['artists'][0]['name']
-    track = track['item']['name']
 
-    if artist != "":
-        print("Currently Playing " + artist + " - " + track)
-        webbrowser.open(track['item']['album']['images'][0]['url'])
+    if track !=None:
+        artist = track['item']['artists'][0]['name']
+        name_track = track['item']['name']
+
+        if artist != "":
+            print("Currently Playing " + artist + " - " + name_track)
+            webbrowser.open(track['item']['album']['images'][0]['url'])
 
 
 user = spotifyObject.current_user()
+
 displayName = user['display_name']
 follower = user['followers']['total']
 
 while True:
     print()
     print(">>>Welcome to Spotipy " + displayName + "!")
-    print(">>> You have " +str(follower) + " followers.")
     print()
     print("0 - Search for an artist")
     print("1 - Exit")
@@ -104,16 +106,21 @@ while True:
                 z+=1
             print()
 
-            # See album art
+        # See album art
         while True:
-            songSelection = input("Etner a song number to see the album art (x to exit): ")
+            songSelection = input("Enter a song number to see the album art and/or to change music if music is already playing (x to exit): ")
             if songSelection =="x":
                 break
+            devices_new = spotifyObject.devices()
+            if devices_new['devices'] !=[]:
+                deviceID_new = devices_new['devices'][0]['id']
+                trackList = []
+                trackList.append(trackURIs[int(songSelection)])
+                spotifyObject.start_playback(deviceID_new, None, trackList)
+
             webbrowser.open(trackArt[int(songSelection)])
 
     # Ends the program
     if choice =="1":
         break
 
-
-# print(json.dumps(VARIABLE, sort_keys=True, indent=4))
