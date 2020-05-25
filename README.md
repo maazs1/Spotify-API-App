@@ -2,8 +2,6 @@ When running the program in a terminal, the user first gets directed to the auth
 
 Make sure spotipy is already installed on your device, can do this by running "pip3 install spotipy"
 
-Run the program by running "python spotify_create.py mms532?si=KP6bNPqvRvi0hprG-vsJ3g"
+Run the program by running "python spotify_create.py accountUserID"
 
-"mms532?si=KP6bNPqvRvi0hprG-vsJ3g" is the UserID from my Spotify Profile Link. This can be accessed by selecting on your account name in the Spotify App, selecting the button with 3 dots (more Button), selecting "Share", and selecting "Copy Profile Link". To obtain your UserId from the Profile link, it will be the information after the "/user/". 
-
-Feel free to use the one I have provided from my account (if you don't have a spotify accout) or use yours! 
+"accountUserID" is the UserID from your Spotify Profile Link, it will vary for each person. This can be accessed by selecting on your account name in the Spotify App, selecting on the button with 3 dots (the more Button), selecting "Share", and selecting "Copy Profile Link". To obtain your UserId from the Profile link, it will be the information after the "/user/". 
